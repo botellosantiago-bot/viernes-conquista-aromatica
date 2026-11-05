@@ -1,0 +1,18 @@
+.DS_Store
+.env
+.env.*
+.viernes-estado/
+.claude/settings.local.json
+
+# Los videos de Arturo se quedan en su Mac.
+videos/*
+!videos/.gitkeep
+
+# Se instalan con instalar.sh.
+estudio/.venv/
+estudio/bin/
+estudio/remotion/node_modules/
+estudio/remotion/out/
+estudio/remotion/build/
+__pycache__/
+*.pyc

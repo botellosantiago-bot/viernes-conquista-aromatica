@@ -1,0 +1,22 @@
+# Todo lo que se instala o se genera en la Mac de Arturo se queda fuera de git.
+.venv/
+bin/
+__pycache__/
+*.pyc
+remotion/node_modules/
+remotion/out/
+remotion/build/
+remotion/.remotion/
+remotion/*.tsbuildinfo
+# Material de video preparado para Remotion (copias de videos de Arturo, voz procesada, riser/PUM a la medida)
+remotion/public/trabajo/
+# Por si alguien deja video suelto dentro del proyecto
+*.mov
+*.mp4
+*.m4v
+*.mkv
+*.wav
+!remotion/public/sfx/**
+# Pistas de música: las pone Arturo y no se versionan (el LEEME.md sí)
+remotion/public/musica/*
+!remotion/public/musica/LEEME.md
