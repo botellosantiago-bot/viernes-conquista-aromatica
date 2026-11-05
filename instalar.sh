@@ -5,6 +5,19 @@
 set -uo pipefail
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ESTUDIO="$RAIZ/estudio"
+REGISTRO="$RAIZ/.viernes-estado/instalar.log"
+mkdir -p "$RAIZ/.viernes-estado"
+: > "$REGISTRO"
+
+# Corre un paso guardando su salida; si falla, enseña el final del error real para no adivinar la causa.
+paso() {
+  local mensaje="$1"; shift
+  echo "--- $mensaje" >> "$REGISTRO"
+  if ! "$@" >> "$REGISTRO" 2>&1; then
+    tail -8 "$REGISTRO"
+    alto "$mensaje (el detalle completo está en .viernes-estado/instalar.log)"
+  fi
+}
 
 alto() {
   echo
@@ -30,8 +43,8 @@ if [ ! -x "$ESTUDIO/.venv/bin/python" ]; then
 fi
 if ! "$ESTUDIO/.venv/bin/python" -c 'import faster_whisper, cv2, imageio_ffmpeg' >/dev/null 2>&1; then
   echo "→ Instalando herramientas de transcripción y video"
-  "$ESTUDIO/.venv/bin/python" -m pip install -q --upgrade pip || alto "No se pudo actualizar pip. Revisa tu internet."
-  "$ESTUDIO/.venv/bin/python" -m pip install -q -r "$ESTUDIO/requirements.txt" || alto "No se pudieron instalar las herramientas de Python. Revisa tu internet."
+  paso "No se pudo actualizar pip." "$ESTUDIO/.venv/bin/python" -m pip install --upgrade pip
+  paso "No se pudieron instalar las herramientas de Python." "$ESTUDIO/.venv/bin/python" -m pip install -r "$ESTUDIO/requirements.txt"
 fi
 echo "✓ Python listo"
 
@@ -41,16 +54,19 @@ ln -sfn "$FFMPEG" "$ESTUDIO/bin/ffmpeg"
 "$ESTUDIO/bin/ffmpeg" -version >/dev/null 2>&1 || alto "ffmpeg no arranca."
 echo "✓ ffmpeg listo"
 
-if [ ! -d "$ESTUDIO/remotion/node_modules" ]; then
+# La marca solo se escribe si todo terminó: una instalación a medias no cuenta como lista.
+MARCA_NPM="$ESTUDIO/remotion/node_modules/.instalacion-completa"
+if [ ! -f "$MARCA_NPM" ] || [ "$ESTUDIO/remotion/package-lock.json" -nt "$MARCA_NPM" ]; then
   echo "→ Instalando el editor de video"
-  (cd "$ESTUDIO/remotion" && npm ci --no-audit --no-fund --silent) || alto "No se pudo instalar el editor de video. Revisa tu internet."
+  (cd "$ESTUDIO/remotion" && paso "No se pudo instalar el editor de video." npm ci --no-audit --no-fund --fetch-retries=5 --fetch-timeout=120000) || exit 1
+  touch "$MARCA_NPM"
 fi
 echo "→ Revisando el navegador del editor (la primera vez baja unos 170 MB)"
-(cd "$ESTUDIO/remotion" && npx --no-install remotion browser ensure >/dev/null 2>&1) || alto "No se pudo bajar el navegador del editor. Revisa tu internet."
+(cd "$ESTUDIO/remotion" && paso "No se pudo bajar el navegador del editor." npx --no-install remotion browser ensure) || exit 1
 echo "✓ Editor de video listo"
 
 echo "→ Revisando el modelo de transcripción (la primera vez baja cerca de 1.5 GB)"
-"$ESTUDIO/.venv/bin/python" -c 'from faster_whisper import WhisperModel; WhisperModel("medium", device="cpu", compute_type="int8")' >/dev/null 2>&1 || alto "No se pudo bajar el modelo de transcripción. Revisa tu internet."
+paso "No se pudo bajar el modelo de transcripción." "$ESTUDIO/.venv/bin/python" -c 'from faster_whisper import WhisperModel; WhisperModel("medium", device="cpu", compute_type="int8")'
 echo "✓ Transcripción lista"
 
 mkdir -p "$RAIZ/videos"
