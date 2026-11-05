@@ -15,7 +15,7 @@
   "permissions": {
     "allow": [
       "Bash(bash voz/di.sh:*)",
-      "Bash(estudio/.venv/bin/python scripts/:*)",
+      "Bash(estudio/.venv/bin/python scripts/*)",
       "Bash(estudio/bin/ffmpeg:*)"
     ]
   }
