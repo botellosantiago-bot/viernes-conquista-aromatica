@@ -56,7 +56,7 @@ Tus videos no se suben a esta repo ni a GitHub. Pero para editarlos, Viernes le 
 ## Para actualizarla
 
 ```bash
-cd ~/Viernes && git pull && bash instalar.sh
+cd ~/Viernes && git pull --no-rebase --no-edit && bash instalar.sh
 ```
 
 Si `git pull` falla, no borres nada: dile a Viernes *"se atoró la actualización"*. Suele pasar cuando se cambió algo del kit, como los colores. Por eso Viernes guarda esos cambios con un commit. Si no se arregla, mándale el error a Santiago.

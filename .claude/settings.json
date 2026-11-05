@@ -21,6 +21,8 @@
     "deny": [
       "Bash(sudo:*)",
       "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(rm -r:*)",
       "Bash(curl:*)",
       "Bash(wget:*)",
       "Bash(git clean:*)",

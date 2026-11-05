@@ -28,6 +28,13 @@ alto() {
   exit 1
 }
 
+# Solo para esta repo: que las actualizaciones y los commits locales de Viernes funcionen aunque Git no esté configurado.
+if [ -d "$RAIZ/.git" ]; then
+  git -C "$RAIZ" config pull.rebase false
+  git -C "$RAIZ" config user.name >/dev/null 2>&1 || git -C "$RAIZ" config user.name "Viernes de Arturo"
+  git -C "$RAIZ" config user.email >/dev/null 2>&1 || git -C "$RAIZ" config user.email "viernes@localhost"
+fi
+
 echo "Instalando a Viernes. La primera vez tarda unos minutos y necesita internet."
 echo
 
