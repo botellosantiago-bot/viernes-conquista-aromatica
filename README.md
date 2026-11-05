@@ -9,7 +9,7 @@ Le das tu video y te regresa un corte con tu firma: los aplausos, el riser y el 
 - Una **Mac con chip Apple (M1 o más nuevo)**. Es donde se probó. En una Mac modesta, transcribir y exportar puede tardar bastante; en una Intel no está probada.
 - **[Claude Code](https://docs.claude.com/en/docs/claude-code/quickstart)** con tu propia cuenta de Claude. Editar consume tu plan.
 - **Una cuenta de GitHub** con invitación a esta repo. Santiago te la manda.
-- **[GitHub CLI](https://cli.github.com/)**, **[Python 3.10 o más nuevo](https://www.python.org/downloads/)** y **[Node.js LTS](https://nodejs.org/)**.
+- **[GitHub CLI](https://cli.github.com/)**, **[Python 3.12 o más nuevo](https://www.python.org/downloads/)** y **[Node.js LTS](https://nodejs.org/)**.
 - **Git.** Si tu Mac no lo tiene, al usarlo te ofrece instalar las herramientas de Xcode: acepta y vuelve a correr el comando.
 - Unos **3 GB libres** para instalar, más lo que pesen tus videos.
 

@@ -32,7 +32,7 @@ echo "Instalando a Viernes. La primera vez tarda unos minutos y necesita interne
 echo
 
 command -v python3 >/dev/null 2>&1 || alto "Falta Python 3. Instálalo desde https://www.python.org/downloads/"
-python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)' || alto "Python es muy viejo: hace falta 3.10 o más nuevo. Instálalo desde https://www.python.org/downloads/"
+python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)' || alto "Python es muy viejo: hace falta 3.12 o más nuevo. Instálalo desde https://www.python.org/downloads/"
 command -v node >/dev/null 2>&1 || alto "Falta Node.js. Instala la versión LTS desde https://nodejs.org/"
 NODE_MAYOR="$(node -p 'process.versions.node.split(".")[0]')"
 [ "$NODE_MAYOR" -ge 18 ] || alto "Node.js es muy viejo: hace falta 18 o más nuevo. Instala la LTS desde https://nodejs.org/"
