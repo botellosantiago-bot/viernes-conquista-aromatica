@@ -6,18 +6,30 @@ Le das tu video y te regresa un corte con tu firma: los aplausos, el riser y el 
 
 ## Qué necesitas
 
-- Una **Mac**.
-- **[Claude Code](https://docs.claude.com/en/docs/claude-code/quickstart)** con tu propia cuenta de Claude.
-- **[Python 3.10 o más nuevo](https://www.python.org/downloads/)** y **[Node.js LTS](https://nodejs.org/)**.
-- Unos 3 GB libres para instalar, más lo que pesen tus videos.
+- Una **Mac con chip Apple (M1 o más nuevo)**. Es donde se probó. En una Mac modesta, transcribir y exportar puede tardar bastante; en una Intel no está probada.
+- **[Claude Code](https://docs.claude.com/en/docs/claude-code/quickstart)** con tu propia cuenta de Claude. Editar consume tu plan.
+- **Una cuenta de GitHub** con invitación a esta repo. Santiago te la manda.
+- **[GitHub CLI](https://cli.github.com/)**, **[Python 3.10 o más nuevo](https://www.python.org/downloads/)** y **[Node.js LTS](https://nodejs.org/)**.
+- **Git.** Si tu Mac no lo tiene, al usarlo te ofrece instalar las herramientas de Xcode: acepta y vuelve a correr el comando.
+- Unos **3 GB libres** para instalar, más lo que pesen tus videos.
 
 ## Instalar
 
-Abre la app **Terminal** y pega estos comandos, uno por uno. Santiago te pasa el enlace de la repo.
+Abre la app **Terminal** y corre estos comandos, uno por uno.
+
+Primero inicia sesión en GitHub. Elige GitHub.com, HTTPS, autenticar Git y entrar con el navegador. No necesitas pegar ninguna contraseña ni token:
 
 ```bash
-git clone <ENLACE-DE-LA-REPO> ~/Viernes
+gh auth login
 ```
+
+Baja a Viernes. Santiago te pasa el nombre exacto de la repo:
+
+```bash
+gh repo clone <NOMBRE-DE-LA-REPO> ~/Viernes
+```
+
+Instálala:
 
 ```bash
 bash ~/Viernes/instalar.sh
@@ -37,11 +49,23 @@ La primera vez que lo abras, macOS o Claude Code pueden pedirte confirmar que co
 
 Viernes no trae música. Dale pistas que tengas derecho a usar: lounge, lo-fi y cuerdas para tu cierre.
 
+## Qué sale de tu Mac
+
+Tus videos no se suben a esta repo ni a GitHub. Pero para editarlos, Viernes le manda a Claude lo que lee: la transcripción, los textos y los cuadros que revisa. No le des nada que no quieras compartir con ese servicio.
+
 ## Para actualizarla
 
 ```bash
 cd ~/Viernes && git pull && bash instalar.sh
 ```
+
+Si `git pull` falla, no borres nada: dile a Viernes *"se atoró la actualización"*. Suele pasar cuando se cambió algo del kit, como los colores. Por eso Viernes guarda esos cambios con un commit. Si no se arregla, mándale el error a Santiago.
+
+## Para desinstalarla
+
+1. Arrastra a la Papelera la carpeta `Viernes` de tu carpeta personal, con tus videos dentro si ya no los quieres. Saca antes los que quieras conservar.
+2. Arrastra a la Papelera **Abrir Viernes** de tu Escritorio.
+3. Para recuperar el espacio del modelo de transcripción, en Finder usa *Ir → Ir a la carpeta* con `~/.cache/huggingface/hub` y manda a la Papelera `models--Systran--faster-whisper-medium`.
 
 ## Si algo falla
 

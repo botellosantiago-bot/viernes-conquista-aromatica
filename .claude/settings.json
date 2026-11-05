@@ -17,6 +17,18 @@
       "Bash(bash voz/di.sh:*)",
       "Bash(estudio/.venv/bin/python scripts/*)",
       "Bash(estudio/bin/ffmpeg:*)"
+    ],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(rm -rf:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(git clean:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git push:*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(~/.ssh/**)"
     ]
   }
 }

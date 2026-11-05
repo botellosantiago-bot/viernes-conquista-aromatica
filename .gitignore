@@ -4,7 +4,7 @@
 .viernes-estado/
 .claude/settings.local.json
 
-# Los videos de Arturo se quedan en su Mac.
+# Los videos de Arturo no se suben a esta repo.
 videos/*
 !videos/.gitkeep
 

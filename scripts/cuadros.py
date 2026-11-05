@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import FF, probe  # noqa: E402
 
 # Zona segura de texto (en px del lienzo): izquierda, arriba, derecha, abajo
-SEGURA = {"16:9": (96, 54, 1824, 1026), "9:16": (80, 250, 900, 1400)}
+SEGURA = {"16:9": (96, 54, 1824, 1026), "9:16": (80, 250, 900, 1500)}
 LIENZO = {"16:9": (1920, 1080), "9:16": (1080, 1920)}
 
 

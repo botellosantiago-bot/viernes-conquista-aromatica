@@ -1,7 +1,8 @@
 #!/bin/bash
 # Deja a Viernes lista en esta Mac. Se puede correr las veces que haga falta: solo hace lo que falte.
 # Uso: bash instalar.sh
-# No toca nada fuera de esta carpeta, salvo crear el acceso "Abrir Viernes" en el Escritorio.
+# Todo lo suyo queda en esta carpeta. Fuera de ella solo crea el acceso "Abrir Viernes" en el Escritorio y usa las cachés
+# normales de cada herramienta: el modelo de Whisper en la de Hugging Face, y lo que guarden npm y pip.
 set -uo pipefail
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ESTUDIO="$RAIZ/estudio"
@@ -92,12 +93,18 @@ else
   FALTA_CLAUDE=1
 fi
 
+# El saludo se dice una sola vez en la vida: actualizar no vuelve a saludar.
 echo
-echo "────────────────────────────────────────────"
-echo "Hola, soy Viernes, la asistente de contenido de tu sobrino Santiago Botello."
-echo "Él me mandó a resolverte tu vida."
-echo "────────────────────────────────────────────"
-bash "$RAIZ/voz/di.sh" saludo
+if [ ! -f "$RAIZ/.viernes-estado/ya-saludo" ]; then
+  touch "$RAIZ/.viernes-estado/ya-saludo"
+  echo "────────────────────────────────────────────"
+  echo "Hola, soy Viernes, la asistente de contenido de tu sobrino Santiago Botello."
+  echo "Él me mandó a resolverte tu vida."
+  echo "────────────────────────────────────────────"
+  bash "$RAIZ/voz/di.sh" saludo
+else
+  echo "✓ Viernes está al día."
+fi
 echo
 if [ "$FALTA_CLAUDE" -eq 1 ]; then
   echo "Falta un paso: instalar Claude Code. Guía: https://docs.claude.com/en/docs/claude-code/quickstart"

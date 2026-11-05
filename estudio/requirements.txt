@@ -1,7 +1,8 @@
 # Herramientas de Python del estudio de edición. Las instala instalar.sh en estudio/.venv
-faster-whisper>=1.0.3
-numpy>=1.26
-imageio-ffmpeg>=0.5.1
-opencv-python-headless>=4.9
-pillow>=10.0
-av>=14.0,<17
+# Versiones exactas: las que se probaron. No subir sin volver a probar (av 19 rompe faster-whisper).
+faster-whisper==1.2.1
+numpy==2.5.4
+imageio-ffmpeg==0.8.1
+opencv-python-headless==5.0.0.93
+pillow==13.0.0
+av==16.1.0

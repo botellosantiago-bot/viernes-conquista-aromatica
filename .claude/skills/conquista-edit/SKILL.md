@@ -29,7 +29,7 @@ le preguntas lo que de verdad falta. **No publicas nada**: dejas el video listo 
 
 Pregunta solo lo que no tengas, todo junto en un mensaje corto:
 
-- **El video** (o los clips). Si es uno solo, basta. Si no está en `videos/`, pídele que lo arrastre o dime dónde está.
+- **El video** (o los clips). Si es uno solo, basta. Si no está en `videos/`, pídele que lo arrastre o que te diga dónde está.
 - **Para qué es:** ¿YouTube horizontal / live (16:9), o Short / Reel / TikTok (9:16), o los dos? Si dice "el video" sin más, haz 16:9 y ofrécele el vertical.
 - **El nombre exacto del perfume y la casa** (como se escriben), y las **notas que sí quiere mostrar**. Nunca las deduzcas.
 - **Fotos o close-ups del frasco**, atomizador, textura, ingredientes (si quiere esas tomas de apoyo).
@@ -106,7 +106,7 @@ y `estudio/remotion/` son el archivo de proyecto.
 ## Formatos y zonas seguras
 
 - **16:9 (1920x1080):** YouTube largo y lives. **9:16 (1080x1920):** Shorts, Reels, TikTok. Mismo plan, dos composiciones.
-- Zona segura de texto: 9:16 x 80–900, y 250–1400 (botones y descripción de las apps); 16:9 margen de 5%. El kit ya la respeta.
+- Zona segura de texto: 9:16 x 80–900, y 250–1500 (botones y descripción de las apps); 16:9 margen de 5%. El kit ya la respeta.
 - Un video horizontal pasa a 9:16 recortando alrededor de su `foco` (la cara). Con 1080p queda blando: sugiere grabar vertical o 4K.
 - Videos largos: render por trozos automático (`render.mjs`). Un live de una hora tarda en renderizar; avísale a Arturo.
 
