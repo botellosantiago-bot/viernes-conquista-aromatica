@@ -9,6 +9,15 @@ import subprocess
 import sys
 import unicodedata
 
+# Que los hijos de Python hablen UTF-8 también en Windows: acentos y símbolos no deben tronar en la consola.
+os.environ.setdefault("PYTHONUTF8", "1")
+os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+for _flujo in (sys.stdout, sys.stderr):
+    try:
+        _flujo.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # cv2 y av traen cada uno su libavdevice y macOS avisa en la consola; es solo ruido.
 os.environ.setdefault("OPENCV_LOG_LEVEL", "ERROR")
 
@@ -19,13 +28,14 @@ REMOTION = os.path.join(ESTUDIO, "remotion")
 PUBLIC = os.path.join(REMOTION, "public")
 TRABAJO = os.path.join(PUBLIC, "trabajo")  # copias de trabajo para Remotion (fuera de git)
 VIDEOS = os.path.join(RAIZ, "videos")
-PY = os.path.join(ESTUDIO, ".venv", "bin", "python")
+# En Windows el Python del entorno vive en Scripts\\python.exe; bin/python es solo un atajo para Git Bash.
+PY = os.path.join(ESTUDIO, ".venv", "Scripts", "python.exe") if os.name == "nt" else os.path.join(ESTUDIO, ".venv", "bin", "python")
 FPS = 30
 SR = 48000
 
 
 def _ffmpeg():
-    local = os.path.join(ESTUDIO, "bin", "ffmpeg")
+    local = os.path.join(ESTUDIO, "bin", "ffmpeg.exe" if os.name == "nt" else "ffmpeg")
     if os.path.exists(local):
         return local
     try:

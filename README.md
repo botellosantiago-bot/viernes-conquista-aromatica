@@ -6,38 +6,50 @@ Le das tu video y te regresa un corte con tu firma: los aplausos, el riser y el 
 
 ## Qué necesitas
 
-- Una **Mac con chip Apple (M1 o más nuevo)**. Es donde se probó. En una Mac modesta, transcribir y exportar puede tardar bastante; en una Intel no está probada.
-- **[Claude Code](https://docs.claude.com/en/docs/claude-code/quickstart)** con tu propia cuenta de Claude. Editar consume tu plan.
-- **Una cuenta de GitHub** con invitación a esta repo. Santiago te la manda.
-- **[GitHub CLI](https://cli.github.com/)**, **[Python 3.12 o más nuevo](https://www.python.org/downloads/)** y **[Node.js LTS](https://nodejs.org/)**.
-- **Git.** Si tu Mac no lo tiene, al usarlo te ofrece instalar las herramientas de Xcode: acepta y vuelve a correr el comando.
+- Una computadora con **Windows 10 u 11 de 64 bits**. Transcribir y exportar usa el procesador: en una computadora modesta puede tardar bastante.
+- **[Claude Code](https://code.claude.com/docs/en/setup)** con tu propia cuenta de Claude. Editar consume tu plan.
+- **Una cuenta de GitHub** con invitación a esta repo. Santiago te la manda: acéptala en tu correo o en github.com.
 - Unos **3 GB libres** para instalar, más lo que pesen tus videos.
 
 ## Instalar
 
-Abre la app **Terminal** y corre estos comandos, uno por uno.
+**1. Instala las herramientas.** Abre **PowerShell** desde el menú Inicio y corre estos comandos, uno por uno. Si Windows te pregunta si permites el cambio, di que sí:
 
-Primero inicia sesión en GitHub. Elige GitHub.com, HTTPS, autenticar Git y entrar con el navegador. No necesitas pegar ninguna contraseña ni token:
+```powershell
+winget install --id Git.Git -e
+winget install --id GitHub.cli -e
+winget install --id Python.Python.3.12 -e
+winget install --id OpenJS.NodeJS.LTS -e
+winget install --id Microsoft.VCRedist.2015+.x64 -e
+```
+
+Para Claude Code, sigue el comando de PowerShell de [su guía oficial](https://code.claude.com/docs/en/setup).
+
+**2. Cierra PowerShell** y abre **Git Bash**, también desde el menú Inicio. Todo lo que sigue va ahí.
+
+**3. Inicia sesión en GitHub.** Elige GitHub.com, HTTPS, autenticar Git y entrar con el navegador. No necesitas pegar ninguna contraseña ni token:
 
 ```bash
 gh auth login
 ```
 
-Baja a Viernes. Santiago te pasa el nombre exacto de la repo:
+**4. Baja a Viernes:**
 
 ```bash
-gh repo clone <NOMBRE-DE-LA-REPO> ~/Viernes
+gh repo clone botellosantiago-bot/viernes-conquista-aromatica ~/Viernes
 ```
 
-Instálala:
+**5. Instálala:**
 
 ```bash
 bash ~/Viernes/instalar.sh
 ```
 
-Al terminar, Viernes te saluda en voz alta. Te deja en el Escritorio un acceso llamado **Abrir Viernes**.
+Al terminar, Viernes te saluda en voz alta y te deja en el Escritorio un acceso llamado **Abrir Viernes**.
 
-La primera vez que lo abras, macOS o Claude Code pueden pedirte confirmar que confías en la carpeta. Si macOS lo bloquea, haz clic derecho sobre el acceso y elige **Abrir**.
+La primera vez que lo abras, Windows o Claude Code pueden pedirte confirmar que confías en él.
+
+También funciona en Mac: mismos pasos, con las herramientas de sus páginas oficiales y la app Terminal en lugar de Git Bash.
 
 ## Usarla
 
@@ -49,11 +61,13 @@ La primera vez que lo abras, macOS o Claude Code pueden pedirte confirmar que co
 
 Viernes no trae música. Dale pistas que tengas derecho a usar: lounge, lo-fi y cuerdas para tu cierre.
 
-## Qué sale de tu Mac
+## Qué sale de tu computadora
 
 Tus videos no se suben a esta repo ni a GitHub. Pero para editarlos, Viernes le manda a Claude lo que lee: la transcripción, los textos y los cuadros que revisa. No le des nada que no quieras compartir con ese servicio.
 
 ## Para actualizarla
+
+En Git Bash:
 
 ```bash
 cd ~/Viernes && git pull --no-rebase --no-edit && bash instalar.sh
@@ -63,9 +77,9 @@ Si `git pull` falla, no borres nada: dile a Viernes *"se atoró la actualizació
 
 ## Para desinstalarla
 
-1. Arrastra a la Papelera la carpeta `Viernes` de tu carpeta personal, con tus videos dentro si ya no los quieres. Saca antes los que quieras conservar.
-2. Arrastra a la Papelera **Abrir Viernes** de tu Escritorio.
-3. Para recuperar el espacio del modelo de transcripción, en Finder usa *Ir → Ir a la carpeta* con `~/.cache/huggingface/hub` y manda a la Papelera `models--Systran--faster-whisper-medium`.
+1. Saca los videos que quieras conservar y manda a la Papelera la carpeta `Viernes` de tu carpeta personal (`C:\Users\tu-usuario\Viernes`).
+2. Borra **Abrir Viernes** de tu Escritorio.
+3. Para recuperar el espacio del modelo de transcripción, en el Explorador de archivos ve a `%USERPROFILE%\.cache\huggingface\hub` y borra `models--Systran--faster-whisper-medium`.
 
 ## Si algo falla
 

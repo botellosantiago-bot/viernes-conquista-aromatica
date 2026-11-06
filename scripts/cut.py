@@ -162,7 +162,7 @@ def main():
     fc.append("".join(etiquetas) + f"concat=n={len(plan)}:v=1:a=1[vc][ac]")
     fc.append(f"[ac]{AF_VOZ},aresample=48000[ao]")
     guion = base + ".filtros.txt"
-    with open(guion, "w") as f:
+    with open(guion, "w", encoding="utf-8") as f:
         f.write(";\n".join(fc))
     print(f"Exportando {len(plan)} piezas a {W}x{H}…", flush=True)
     ff(*entradas, *filtro_desde_archivo(guion), "-map", "[vc]", "-map", "[ao]", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "16",

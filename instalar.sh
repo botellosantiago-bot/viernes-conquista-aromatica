@@ -1,5 +1,5 @@
 #!/bin/bash
-# Deja a Viernes lista en esta Mac. Se puede correr las veces que haga falta: solo hace lo que falte.
+# Deja a Viernes lista en esta computadora (Windows, desde Git Bash, o Mac). Se puede correr las veces que haga falta: solo hace lo que falte.
 # Uso: bash instalar.sh
 # Todo lo suyo queda en esta carpeta. Fuera de ella solo crea el acceso "Abrir Viernes" en el Escritorio y usa las cachés
 # normales de cada herramienta: el modelo de Whisper en la de Hugging Face, y lo que guarden npm y pip.
@@ -7,6 +7,10 @@ set -uo pipefail
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ESTUDIO="$RAIZ/estudio"
 REGISTRO="$RAIZ/.viernes-estado/instalar.log"
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*) WINDOWS=1; VENV_PY="$ESTUDIO/.venv/Scripts/python.exe" ;;
+  *) WINDOWS=0; VENV_PY="$ESTUDIO/.venv/bin/python" ;;
+esac
 mkdir -p "$RAIZ/.viernes-estado"
 : > "$REGISTRO"
 
@@ -38,27 +42,58 @@ fi
 echo "Instalando a Viernes. La primera vez tarda unos minutos y necesita internet."
 echo
 
-command -v python3 >/dev/null 2>&1 || alto "Falta Python 3. Instálalo desde https://www.python.org/downloads/"
-python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)' || alto "Python es muy viejo: hace falta 3.12 o más nuevo. Instálalo desde https://www.python.org/downloads/"
+# En Windows "python3" puede ser el acceso falso de la Microsoft Store: solo cuenta el que de verdad corre y es 3.12+.
+PY_BASE=()
+for candidato in "py -3.12" "py -3" "python3" "python"; do
+  # shellcheck disable=SC2086
+  if $candidato -c 'import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)' >/dev/null 2>&1; then
+    read -r -a PY_BASE <<< "$candidato"
+    break
+  fi
+done
+[ "${#PY_BASE[@]}" -gt 0 ] || alto "Falta Python 3.12 o más nuevo. Instálalo desde https://www.python.org/downloads/"
 command -v node >/dev/null 2>&1 || alto "Falta Node.js. Instala la versión LTS desde https://nodejs.org/"
-NODE_MAYOR="$(node -p 'process.versions.node.split(".")[0]')"
+NODE_MAYOR="$(node -p 'process.versions.node.split(".")[0]' | tr -d '\r')"
 [ "$NODE_MAYOR" -ge 18 ] || alto "Node.js es muy viejo: hace falta 18 o más nuevo. Instala la LTS desde https://nodejs.org/"
 command -v npm >/dev/null 2>&1 || alto "Falta npm. Viene con Node.js: reinstálalo desde https://nodejs.org/"
 
-if [ ! -x "$ESTUDIO/.venv/bin/python" ]; then
+if [ ! -x "$VENV_PY" ]; then
   echo "→ Preparando Python"
-  python3 -m venv "$ESTUDIO/.venv" || alto "No se pudo crear el entorno de Python."
+  "${PY_BASE[@]}" -m venv "$ESTUDIO/.venv" || alto "No se pudo crear el entorno de Python."
 fi
-if ! "$ESTUDIO/.venv/bin/python" -c 'import faster_whisper, cv2, imageio_ffmpeg' >/dev/null 2>&1; then
+# En Windows el Python del entorno vive en Scripts\python.exe. Este atajo deja el mismo comando en todas partes:
+# estudio/.venv/bin/python, en UTF-8 para que los acentos no truenen con la codificación de Windows.
+if [ "$WINDOWS" -eq 1 ]; then
+  mkdir -p "$ESTUDIO/.venv/bin"
+  {
+    echo '#!/bin/bash'
+    echo 'export PYTHONUTF8=1 PYTHONIOENCODING=utf-8'
+    echo 'exec "$(dirname "${BASH_SOURCE[0]}")/../Scripts/python.exe" "$@"'
+  } > "$ESTUDIO/.venv/bin/python"
+  chmod +x "$ESTUDIO/.venv/bin/python"
+  export PYTHONUTF8=1 PYTHONIOENCODING=utf-8
+fi
+if ! "$VENV_PY" -c 'import faster_whisper, cv2, imageio_ffmpeg' >/dev/null 2>&1; then
   echo "→ Instalando herramientas de transcripción y video"
-  paso "No se pudo actualizar pip." "$ESTUDIO/.venv/bin/python" -m pip install --upgrade pip
-  paso "No se pudieron instalar las herramientas de Python." "$ESTUDIO/.venv/bin/python" -m pip install -r "$ESTUDIO/requirements.txt"
+  paso "No se pudo actualizar pip." "$VENV_PY" -m pip install --upgrade pip
+  paso "No se pudieron instalar las herramientas de Python." "$VENV_PY" -m pip install -r "$ESTUDIO/requirements.txt"
+fi
+if ! "$VENV_PY" -c 'import faster_whisper, cv2, av' >/dev/null 2>&1; then
+  if [ "$WINDOWS" -eq 1 ]; then
+    alto "Las herramientas de video no arrancan. Instala Microsoft Visual C++ Redistributable: winget install Microsoft.VCRedist.2015+.x64"
+  fi
+  alto "Las herramientas de video no arrancan."
 fi
 echo "✓ Python listo"
 
-FFMPEG="$("$ESTUDIO/.venv/bin/python" -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" || alto "No se encontró ffmpeg."
+FFMPEG="$("$VENV_PY" -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())' | tr -d '\r')"
+[ -n "$FFMPEG" ] || alto "No se encontró ffmpeg."
 mkdir -p "$ESTUDIO/bin"
-ln -sfn "$FFMPEG" "$ESTUDIO/bin/ffmpeg"
+if [ "$WINDOWS" -eq 1 ]; then
+  cp -f "$(cygpath -u "$FFMPEG")" "$ESTUDIO/bin/ffmpeg.exe" || alto "No se pudo copiar ffmpeg."
+else
+  ln -sfn "$FFMPEG" "$ESTUDIO/bin/ffmpeg"
+fi
 "$ESTUDIO/bin/ffmpeg" -version >/dev/null 2>&1 || alto "ffmpeg no arranca."
 echo "✓ ffmpeg listo"
 
@@ -74,14 +109,24 @@ echo "→ Revisando el navegador del editor (la primera vez baja unos 170 MB)"
 echo "✓ Editor de video listo"
 
 echo "→ Revisando el modelo de transcripción (la primera vez baja cerca de 1.5 GB)"
-paso "No se pudo bajar el modelo de transcripción." "$ESTUDIO/.venv/bin/python" -c 'from faster_whisper import WhisperModel; WhisperModel("medium", device="cpu", compute_type="int8")'
+paso "No se pudo bajar el modelo de transcripción." "$VENV_PY" -c 'from faster_whisper import WhisperModel; WhisperModel("medium", device="cpu", compute_type="int8")'
 echo "✓ Transcripción lista"
 
 mkdir -p "$RAIZ/videos"
 chmod +x "$RAIZ/voz/di.sh" "$RAIZ/voz/al-iniciar.sh" "$RAIZ/Abrir Viernes.command" 2>/dev/null
 
 # Acceso directo para abrirla con doble clic.
-if [ -d "$HOME/Desktop" ]; then
+if [ "$WINDOWS" -eq 1 ]; then
+  # El Escritorio puede estar dentro de OneDrive: se le pregunta a Windows dónde está.
+  ESCRITORIO="$(powershell.exe -NoProfile -NonInteractive -Command "[Environment]::GetFolderPath('Desktop')" 2>/dev/null | tr -d '\r')"
+  if [ -n "$ESCRITORIO" ] && [ -d "$(cygpath -u "$ESCRITORIO")" ]; then
+    ACCESO="$(cygpath -u "$ESCRITORIO")/Abrir Viernes.cmd"
+    if [ ! -e "$ACCESO" ]; then
+      printf '@echo off\r\ncall "%s\\Abrir Viernes.cmd"\r\n' "$(cygpath -w "$RAIZ")" > "$ACCESO"
+      echo "✓ Acceso \"Abrir Viernes\" en tu Escritorio"
+    fi
+  fi
+elif [ -d "$HOME/Desktop" ]; then
   ACCESO="$HOME/Desktop/Abrir Viernes.command"
   if [ ! -e "$ACCESO" ]; then
     {
@@ -114,7 +159,11 @@ else
 fi
 echo
 if [ "$FALTA_CLAUDE" -eq 1 ]; then
-  echo "Falta un paso: instalar Claude Code. Guía: https://docs.claude.com/en/docs/claude-code/quickstart"
+  if [ "$WINDOWS" -eq 1 ]; then
+    echo "Falta un paso: instalar Claude Code. Abre PowerShell y sigue la guía: https://code.claude.com/docs/en/setup"
+  else
+    echo "Falta un paso: instalar Claude Code. Guía: https://docs.claude.com/en/docs/claude-code/quickstart"
+  fi
   echo "Después abre \"Abrir Viernes\" en tu Escritorio."
 else
   echo "Para empezar, abre \"Abrir Viernes\" en tu Escritorio y dime: edítame este video."

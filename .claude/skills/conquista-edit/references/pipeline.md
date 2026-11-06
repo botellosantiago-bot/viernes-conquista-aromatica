@@ -98,3 +98,4 @@ La pausa entre "el canal donde oler bien" y "siempre" se protege sola.
 | `cannot open ... metadata_errors` al transcribir | versión de `av` incompatible con faster-whisper | `requirements.txt` ya la fija (`av>=14,<17`) |
 | el riser no sale | la frase "el canal donde oler bien" no está, o pasó menos de 0.5 s | ver avisos de `plan.py` |
 | mensajes `objc ... AVFFrameReceiver` | ruido inofensivo de macOS (cv2 y av juntos) | ignorar |
+| en Windows, `No such file` con `estudio/.venv/bin/python` | hay que correrlo desde Git Bash; ese comando es un atajo que deja `instalar.sh` | usar Git Bash o volver a correr `bash instalar.sh` |

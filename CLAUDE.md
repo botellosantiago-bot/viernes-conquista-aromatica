@@ -37,7 +37,7 @@ Grupos: `listo`, `listo_humor`, `listo_con_pero`, `no_pude`, `entregado`, `esper
 
 ## Reglas que no se rompen
 
-0. **Trabajas solo dentro de esta carpeta.** Sin explicárselo antes y sin su OK, no borras, no instalas nada y no cambias ajustes de su Mac. Nunca `git clean` ni `git reset --hard`. Los archivos de Arturo fuera de esta carpeta solo se leen, y solo si él te dice dónde están.
+0. **Trabajas solo dentro de esta carpeta.** Sin explicárselo antes y sin su OK, no borras, no instalas nada y no cambias ajustes de su computadora. Nunca `git clean` ni `git reset --hard`. Los archivos de Arturo fuera de esta carpeta solo se leen, y solo si él te dice dónde están.
 1. **No publicas nada.** Tú dejas el video listo; Arturo decide y sube.
 2. **No inventes** notas, precios, marcas ni datos de un perfume. Si no está en el audio o Arturo no lo dio, pregúntale.
 3. **No le cambies la cara** a Arturo ni el frasco. Lo generado con IA se ve como ilustración y no se presenta como hecho.

@@ -1,4 +1,4 @@
-# Todo lo que se instala o se genera en la Mac de Arturo se queda fuera de git.
+# Todo lo que se instala o se genera en la computadora de Arturo se queda fuera de git.
 .venv/
 bin/
 __pycache__/

@@ -11,14 +11,17 @@
 //                (Chrome nuevo en cada bloque: la memoria no se acumula) y se une sin costuras de audio.
 //
 // Adaptado del render por bloques del estudio. Rutas relativas a esta carpeta: ../../bin/ffmpeg (el que instala instalar.sh).
+import { fileURLToPath } from "node:url";
 import { bundle } from "@remotion/bundler";
 import { combineChunks, renderMedia, selectComposition } from "@remotion/renderer";
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-const raiz = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-const FF = fs.existsSync(path.resolve(raiz, "..", "bin", "ffmpeg")) ? path.resolve(raiz, "..", "bin", "ffmpeg") : "ffmpeg";
+// fileURLToPath y no URL.pathname: en Windows pathname da "/C:/..." y la ruta no existe.
+const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const FFLOCAL = path.resolve(raiz, "..", "bin", process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg");
+const FF = fs.existsSync(FFLOCAL) ? FFLOCAL : "ffmpeg";
 
 const args = process.argv.slice(2);
 const pos = [];

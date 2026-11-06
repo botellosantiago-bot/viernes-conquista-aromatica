@@ -1,0 +1,11 @@
+# Los scripts de bash no corren con finales de línea de Windows.
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.mjs text eol=lf
+*.command text eol=lf
+*.cmd text eol=crlf
+*.mp3 binary
+*.wav binary
+*.png binary
+*.jpg binary
